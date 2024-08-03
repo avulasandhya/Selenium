@@ -1,0 +1,68 @@
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class Project {
+	public static void main(String[] args) throws InterruptedException {
+	System.setProperty("webdriver.chrome.driver", "C:\\Users\\avula\\Downloads\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
+	WebDriver driver=new ChromeDriver();
+	driver.manage().window().maximize();
+	driver.navigate().to("https://www.fitpeo.com/");
+	Thread.sleep(1000);
+	driver.navigate().to("https://fitpeo.com/revenue-calculator");
+	 WebDriverWait wait = new WebDriverWait(driver, 15);
+	 WebElement sliderSection = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[1]/div[1]/div[1]/div[1]/div/h5"))); // Replace with actual slider section ID or locator
+     ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", sliderSection);
+     
+     WebElement slider = driver.findElement(By.xpath("/html/body/div[2]/div[1]/div[1]/div[2]/div/div/span[1]/span[3]/input")); // Replace with the actual slider ID or locator
+    WebElement textField = driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[1]/div[1]/div/div[2]/p[1]")); // Replace with the actual text field ID or locator
+     
+     driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
+     
+     // Simulate setting slider to 820
+    ((JavascriptExecutor) driver).executeScript("arguments[0].value = '820'; arguments[0].dispatchEvent(new Event('change'));", slider);
+     // Verify slider value updates
+    //wait.until(ExpectedConditions.textToBePresentInElementValue(textField, "820"));
+     
+    // wait.until(ExpectedConditions.textToBePresentInElementValue(textField, "820"));
+     driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
+   // driver.findElement(By.id(":R57alklff9da:")).sendKeys("820");
+     
+     // 5. Update the Text Field
+     textField.clear();
+     textField.sendKeys("560");
+
+     // Wait for slider to update
+     WebElement updatedSlider = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("slider-id"))); // Replace with actual slider ID or locator
+     WebElement updatedTextField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("text-field-id"))); // Replace with actual text field ID or locator
+
+    // 6. Validate Slider Value
+     String textFieldValue = updatedTextField.getAttribute("value");
+     assert textFieldValue.equals("560") : "Text field value did not update correctly.";
+
+     // 7. Select CPT Codes
+     WebElement cpt99091 = driver.findElement(By.id("/html/body/div[1]/div[1]/div[2]/div[1]/label/span[1]/input")); // Replace with actual locator
+     WebElement cpt99453 = driver.findElement(By.id("cpt-99453")); // Replace with actual locator
+     WebElement cpt99454 = driver.findElement(By.id("cpt-99454")); // Replace with actual locator
+     WebElement cpt99474 = driver.findElement(By.id("cpt-99474")); // Replace with actual locator
+
+     cpt99091.click();
+     cpt99453.click();
+     cpt99454.click();
+     cpt99474.click();
+     WebElement totalReimbursement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("total-reimbursement-id"))); // Replace with actual ID or locator
+     String reimbursementValue = totalReimbursement.getText();
+
+     assert reimbursementValue.equals("$110700") : "Total recurring reimbursement value is incorrect.";
+
+   
+
+
+}
+}
